@@ -1,4 +1,4 @@
-import { useFieldValue, useTranslate } from "ra-core";
+import { useFieldValue, useNotify, useTranslate } from "ra-core";
 import { createRef, useCallback, useState } from "react";
 import type { ReactCropperElement } from "react-cropper";
 import { Cropper } from "react-cropper";
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dialog";
 
 import "cropperjs/dist/cropper.css";
+
+import { rasterizeSvg } from "./rasterizeSvg";
 
 const ImageEditorField = (props: ImageEditorFieldProps) => {
   const translate = useTranslate();
@@ -89,6 +91,7 @@ const ImageEditorField = (props: ImageEditorFieldProps) => {
 
 const ImageEditorDialog = (props: ImageEditorDialogProps) => {
   const translate = useTranslate();
+  const notify = useNotify();
   const { setValue, handleSubmit } = useFormContext();
   const cropperRef = createRef<ReactCropperElement>();
   const initialValue = useFieldValue({ source: props.source });
@@ -96,33 +99,63 @@ const ImageEditorDialog = (props: ImageEditorDialogProps) => {
   const [imageSrc, setImageSrc] = useState<string | undefined>(
     initialValue?.src,
   );
-  const onDrop = useCallback((files: File[]) => {
-    const preview = URL.createObjectURL(files[0]);
-    setFile(files[0]);
-    setImageSrc(preview);
-  }, []);
+  const notifyUnsupportedFile = useCallback(
+    () => notify("crm.image_editor.unsupported_file", { type: "warning" }),
+    [notify],
+  );
 
-  const updateImage = () => {
-    const cropper = cropperRef.current?.cropper;
-    const croppedImage = cropper?.getCroppedCanvas().toDataURL();
-    if (croppedImage) {
-      setImageSrc(croppedImage);
-
-      const newFile = file ?? new File([], initialValue?.src);
-      setValue(
-        props.source,
-        {
-          src: croppedImage,
-          title: newFile.name,
-          rawFile: newFile,
-        },
-        { shouldDirty: true },
-      );
-      props.onClose();
-
-      if (props.onSave) {
-        handleSubmit(props.onSave)();
+  const onDrop = useCallback(
+    async (files: File[]) => {
+      const [droppedFile] = files;
+      if (!droppedFile) return;
+      try {
+        const preview =
+          droppedFile.type === "image/svg+xml"
+            ? await rasterizeSvg(droppedFile)
+            : URL.createObjectURL(droppedFile);
+        setFile(droppedFile);
+        setImageSrc(preview);
+      } catch {
+        notifyUnsupportedFile();
       }
+    },
+    [notifyUnsupportedFile],
+  );
+
+  const updateImage = async () => {
+    const canvas = cropperRef.current?.cropper.getCroppedCanvas({
+      minWidth: 256,
+      minHeight: 256,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageSmoothingQuality: "high",
+    });
+    if (!canvas) return;
+    // The cropper always exports PNG, whatever format was dropped
+    const croppedImage = canvas.toDataURL("image/png");
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/png"),
+    );
+    if (!blob) return;
+    setImageSrc(croppedImage);
+
+    const title = file?.name ?? initialValue?.title ?? "image.png";
+    const croppedFile = new File([blob], title.replace(/\.[^.]*$/, ".png"), {
+      type: "image/png",
+    });
+    setValue(
+      props.source,
+      {
+        src: croppedImage,
+        title,
+        rawFile: croppedFile,
+      },
+      { shouldDirty: true },
+    );
+    props.onClose();
+
+    if (props.onSave) {
+      handleSubmit(props.onSave)();
     }
   };
 
@@ -136,9 +169,16 @@ const ImageEditorDialog = (props: ImageEditorDialogProps) => {
   };
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: { "image/jpeg": [".jpeg", ".png"] },
+    accept: {
+      "image/jpeg": [".jpg", ".jpeg"],
+      "image/png": [".png"],
+      "image/webp": [".webp"],
+      "image/gif": [".gif"],
+      "image/svg+xml": [".svg"],
+    },
     onDrop,
-    maxFiles: 1,
+    onDropRejected: notifyUnsupportedFile,
+    multiple: false,
   });
 
   return (
@@ -163,13 +203,18 @@ const ImageEditorDialog = (props: ImageEditorDialogProps) => {
         </DialogHeader>
         <div className="flex flex-col gap-2 justify-center">
           <div
-            className="flex flex-row justify-center bg-gray-50 cursor-pointer p-4 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+            className="flex flex-col items-center gap-1 bg-muted/40 cursor-pointer p-4 border-2 border-dashed rounded-lg hover:bg-muted transition-colors"
             {...getRootProps()}
           >
             <input {...getInputProps()} />
-            <p className="text-gray-600">
+            <p className="text-sm text-muted-foreground">
               {translate("crm.image_editor.drop_hint", {
                 _: "Drop a file to upload, or click to select it.",
+              })}
+            </p>
+            <p className="text-xs text-muted-foreground/80">
+              {translate("crm.image_editor.accepted_formats", {
+                _: "PNG, JPG, SVG, WebP or GIF",
               })}
             </p>
           </div>
@@ -186,7 +231,7 @@ const ImageEditorDialog = (props: ImageEditorDialogProps) => {
         </div>
 
         <DialogFooter className="flex justify-between w-full">
-          <Button type="button" onClick={updateImage}>
+          <Button type="button" onClick={() => void updateImage()}>
             {translate("crm.image_editor.update_image")}
           </Button>
           <Button type="button" variant="destructive" onClick={deleteImage}>

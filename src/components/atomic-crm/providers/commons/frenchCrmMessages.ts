@@ -497,11 +497,14 @@ export const frenchCrmMessages = {
       },
     },
     image_editor: {
+      accepted_formats: "PNG, JPG, SVG, WebP ou GIF",
       change: "Changer",
       drop_hint:
         "Déposez un fichier à télécharger ou cliquez pour le sélectionner.",
       editable_content: "Contenu modifiable",
       title: "Télécharger et redimensionner l'image",
+      unsupported_file:
+        "Choisissez une seule image PNG, JPG, SVG, WebP ou GIF.",
       update_image: "Mettre à jour l'image",
     },
     import: {

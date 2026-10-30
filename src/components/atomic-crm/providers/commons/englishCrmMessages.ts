@@ -487,10 +487,12 @@ export const englishCrmMessages = {
       },
     },
     image_editor: {
+      accepted_formats: "PNG, JPG, SVG, WebP or GIF",
       change: "Change",
       drop_hint: "Drop a file to upload, or click to select it.",
       editable_content: "Editable content",
       title: "Upload and resize image",
+      unsupported_file: "Choose one PNG, JPG, SVG, WebP or GIF image.",
       update_image: "Update Image",
     },
     import: {
