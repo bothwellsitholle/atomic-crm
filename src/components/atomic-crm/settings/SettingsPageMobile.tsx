@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
+  ItemDescription,
   ItemTitle,
   ItemActions,
   ItemGroup,
@@ -18,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Check, Copy, LogOut, Moon, Smartphone, Sun } from "lucide-react";
 import {
@@ -42,6 +44,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { enterDemoMode, exitDemoMode, isDemoMode } from "../demo/demoMode";
 import { MobileContent } from "../layout/MobileContent";
 import MobileHeader from "../layout/MobileHeader";
 import { ChangelogPage } from "../misc/ChangelogPage";
@@ -439,8 +442,36 @@ const PreferencesSection = () => {
         <LanguageRow />
         <ItemSeparator />
         <ThemeRow />
+        <ItemSeparator />
+        <DemoModeRow />
       </ItemGroup>
     </div>
+  );
+};
+
+const DemoModeRow = () => {
+  const translate = useTranslate();
+
+  return (
+    <Item size="sm">
+      <ItemContent>
+        <ItemTitle className="font-normal text-muted-foreground">
+          {translate("crm.demo_mode.label")}
+        </ItemTitle>
+        <ItemDescription>
+          {translate("crm.demo_mode.description")}
+        </ItemDescription>
+      </ItemContent>
+      <ItemActions>
+        <Switch
+          checked={isDemoMode()}
+          onCheckedChange={(checked) =>
+            checked ? enterDemoMode() : exitDemoMode()
+          }
+          aria-label={translate("crm.demo_mode.label")}
+        />
+      </ItemActions>
+    </Item>
   );
 };
 

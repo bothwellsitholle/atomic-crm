@@ -461,6 +461,14 @@ export const englishCrmMessages = {
     header: {
       import_data: "Import from JSON",
     },
+    demo_mode: {
+      label: "Demo mode",
+      enter: "Try demo mode",
+      exit: "Back to real data",
+      banner:
+        "Demo mode: you are exploring sample data. Changes are not saved and reset when you reload.",
+      description: "Practice with sample data. Your real data is not affected.",
+    },
     search: {
       title: "Search",
       placeholder: "Search contacts, companies, deals, tasks and notes...",

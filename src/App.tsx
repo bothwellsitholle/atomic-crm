@@ -1,4 +1,8 @@
+import { lazy, Suspense } from "react";
+import { isDemoMode } from "@/components/atomic-crm/demo/demoMode";
 import { CRM } from "@/components/atomic-crm/root/CRM";
+
+const DemoCRM = lazy(() => import("@/components/atomic-crm/demo/DemoCRM"));
 
 /**
  * Application entry point
@@ -31,6 +35,13 @@ import { CRM } from "@/components/atomic-crm/root/CRM";
  *    />
  * );
  */
-const App = () => <CRM />;
+const App = () =>
+  isDemoMode() ? (
+    <Suspense>
+      <DemoCRM />
+    </Suspense>
+  ) : (
+    <CRM />
+  );
 
 export default App;

@@ -1,4 +1,12 @@
-import { FileText, Import, Settings, User, Users } from "lucide-react";
+import {
+  Database,
+  FileText,
+  FlaskConical,
+  Import,
+  Settings,
+  User,
+  Users,
+} from "lucide-react";
 import { CanAccess, useTranslate, useUserMenu } from "ra-core";
 import { Link, matchPath, useLocation } from "react-router";
 import { RefreshButton } from "@/components/admin/refresh-button";
@@ -6,6 +14,7 @@ import { ThemeModeToggle } from "@/components/admin/theme-mode-toggle";
 import { UserMenu } from "@/components/admin/user-menu";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
+import { enterDemoMode, exitDemoMode, isDemoMode } from "../demo/demoMode";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import { ImportPage } from "../misc/ImportPage";
 import { ChangelogPage } from "../misc/ChangelogPage";
@@ -95,6 +104,7 @@ const Header = () => {
                   <CanAccess resource="configuration" action="edit">
                     <SettingsMenu />
                   </CanAccess>
+                  <DemoModeMenuItem />
                   <ImportFromJsonMenuItem />
                   <ChangelogMenuItem />
                 </UserMenu>
@@ -175,6 +185,31 @@ const SettingsMenu = () => {
     >
       <Settings />
       {translate("crm.settings.title")}
+    </DropdownMenuItem>
+  );
+};
+
+const DemoModeMenuItem = () => {
+  const translate = useTranslate();
+  const userMenuContext = useUserMenu();
+  if (!userMenuContext) {
+    throw new Error("<DemoModeMenuItem> must be used inside <UserMenu>");
+  }
+  const demo = isDemoMode();
+  return (
+    <DropdownMenuItem
+      onClick={() => {
+        userMenuContext.onClose();
+        if (demo) {
+          exitDemoMode();
+        } else {
+          enterDemoMode();
+        }
+      }}
+      className="flex items-center gap-2"
+    >
+      {demo ? <Database /> : <FlaskConical />}
+      {translate(demo ? "crm.demo_mode.exit" : "crm.demo_mode.enter")}
     </DropdownMenuItem>
   );
 };

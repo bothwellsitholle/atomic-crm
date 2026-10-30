@@ -5,6 +5,7 @@ import { Suspense, type ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { DataImportProvider } from "../dataImport/DataImportProvider";
+import { DemoModeMobileBadge } from "../demo/DemoModeBanner";
 import { useConfigurationLoader } from "../root/useConfigurationLoader";
 import { MobileNavigation } from "./MobileNavigation";
 import { PullToRefresh } from "./PullToRefresh";
@@ -19,6 +20,7 @@ export const MobileLayout = ({ children }: { children: ReactNode }) => {
           {children}
         </Suspense>
       </ErrorBoundary>
+      <DemoModeMobileBadge />
       <MobileNavigation />
       <Notification mobileOffset={{ bottom: "72px" }} />
     </DataImportProvider>

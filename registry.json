@@ -588,6 +588,18 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/demo/demoMode.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/demo/DemoModeBanner.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/demo/DemoCRM.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/deals/stages.ts",
           "type": "registry:component"
         },

@@ -468,6 +468,15 @@ export const frenchCrmMessages = {
     header: {
       import_data: "Importer depuis JSON",
     },
+    demo_mode: {
+      label: "Mode démo",
+      enter: "Essayer le mode démo",
+      exit: "Revenir aux vraies données",
+      banner:
+        "Mode démo : vous explorez des données d'exemple. Les modifications ne sont pas enregistrées et disparaissent au rechargement.",
+      description:
+        "Entraînez-vous avec des données d'exemple. Vos vraies données ne sont pas modifiées.",
+    },
     search: {
       title: "Rechercher",
       placeholder:
