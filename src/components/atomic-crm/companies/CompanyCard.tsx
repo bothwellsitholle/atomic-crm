@@ -33,7 +33,7 @@ export const CompanyCard = (props: { record?: Company }) => {
       })}
       className="no-underline"
     >
-      <Card className="h-[200px] flex flex-col justify-between p-4 hover:bg-muted">
+      <Card className="h-[200px] flex flex-col justify-between p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-primary/30">
         <div className="flex flex-col items-center gap-1">
           <CompanyAvatar />
           <div className="text-center mt-1">

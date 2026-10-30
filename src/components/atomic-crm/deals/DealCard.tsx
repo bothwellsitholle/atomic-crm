@@ -50,13 +50,13 @@ export const DealCardContent = ({
         <Card
           className={`py-3 transition-all duration-200 ${
             snapshot?.isDragging
-              ? "opacity-90 transform rotate-1 shadow-lg"
-              : "shadow-sm hover:shadow-md"
+              ? "opacity-90 transform rotate-1 shadow-lg ring-primary/40"
+              : "hover:-translate-y-0.5 hover:shadow-md hover:ring-primary/30"
           }`}
         >
           <CardContent className="px-3 flex flex-col">
-            <div className="flex-1 flex">
-              <p className="flex-1 text-sm font-medium mb-2">
+            <div className="flex-1 flex items-start gap-2">
+              <p className="flex-1 text-sm font-medium leading-snug">
                 <ReferenceField
                   source="company_id"
                   reference="companies"
@@ -73,9 +73,10 @@ export const DealCardContent = ({
                 <CompanyAvatar width={20} height={20} />
               </ReferenceField>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <div className="mt-2.5 flex items-center gap-2 text-xs">
               <NumberField
                 source="amount"
+                className="font-semibold tabular-nums"
                 options={{
                   notation: "compact",
                   style: "currency",
@@ -84,9 +85,12 @@ export const DealCardContent = ({
                   minimumSignificantDigits: 3,
                 }}
               />
-              {deal.categories?.length ? ", " : ""}
-              {formatDealCategories(dealCategories, deal.categories)}
-            </p>
+              {deal.categories?.length ? (
+                <span className="truncate rounded-md bg-muted px-1.5 py-0.5 text-muted-foreground">
+                  {formatDealCategories(dealCategories, deal.categories)}
+                </span>
+              ) : null}
+            </div>
           </CardContent>
         </Card>
       </RecordContextProvider>

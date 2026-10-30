@@ -31,13 +31,13 @@ const Header = () => {
 
   return (
     <>
-      <nav className="grow">
-        <header className="bg-secondary">
-          <div className="px-4">
-            <div className="flex justify-between items-center flex-1">
+      <nav className="sticky top-0 z-40 grow">
+        <header className="border-b bg-card/85 backdrop-blur-md">
+          <div className="max-w-screen-xl mx-auto px-4">
+            <div className="flex justify-between items-center flex-1 h-14 gap-4">
               <Link
                 to="/"
-                className="flex items-center gap-2 text-secondary-foreground no-underline"
+                className="flex items-center gap-2.5 text-foreground no-underline"
               >
                 <img
                   className="[.light_&]:hidden h-6"
@@ -49,10 +49,12 @@ const Header = () => {
                   src={lightModeLogo}
                   alt={title}
                 />
-                <h1 className="text-xl font-semibold">{title}</h1>
+                <h1 className="text-lg font-semibold tracking-tight">
+                  {title}
+                </h1>
               </Link>
               <div>
-                <nav className="flex">
+                <nav className="flex items-center gap-1 rounded-full bg-muted p-1">
                   <NavigationTab
                     label={translate("ra.page.dashboard")}
                     to="/"
@@ -81,7 +83,7 @@ const Header = () => {
                   />
                 </nav>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center gap-1">
                 <GlobalSearchButton />
                 <ThemeModeToggle />
                 <RefreshButton />
@@ -116,10 +118,10 @@ const NavigationTab = ({
 }) => (
   <Link
     to={to}
-    className={`px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
+    className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
       isActive
-        ? "text-secondary-foreground border-secondary-foreground"
-        : "text-secondary-foreground/70 border-transparent hover:text-secondary-foreground/80"
+        ? "bg-card text-foreground shadow-xs ring-1 ring-foreground/8"
+        : "text-muted-foreground hover:text-foreground"
     }`}
   >
     {label}
