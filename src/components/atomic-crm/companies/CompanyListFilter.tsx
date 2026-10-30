@@ -18,7 +18,7 @@ export const CompanyListFilter = () => {
     name: getTranslatedCompanySizeLabel(size, translate),
   }));
   return (
-    <div className="w-52 min-w-52 flex flex-col gap-8">
+    <div className="w-60 min-w-60 self-start order-first flex flex-col gap-4 rounded-xl border bg-card p-3">
       <FilterLiveForm>
         <SearchInput source="q" />
       </FilterLiveForm>

@@ -42,11 +42,15 @@ export const ToggleFilterButton = ({
   const handleClick = () => setFilters(toggleFilter(value, filterValues));
   return (
     <Button
-      variant={isSelected ? "secondary" : "ghost"}
+      variant="ghost"
       onClick={handleClick}
+      aria-pressed={isSelected}
       className={cn(
         "cursor-pointer",
-        "flex flex-row items-center justify-between gap-2 px-2.5 w-full",
+        "flex flex-row items-center justify-between gap-2 px-2.5 w-full font-normal",
+        isSelected
+          ? "bg-primary/10 font-medium text-primary hover:bg-primary/15 hover:text-primary"
+          : "text-muted-foreground hover:text-foreground",
         className,
       )}
       size={size}
