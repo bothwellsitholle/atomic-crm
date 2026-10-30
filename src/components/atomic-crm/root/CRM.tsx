@@ -24,6 +24,7 @@ import { Layout } from "../layout/Layout";
 import { MobileLayout } from "../layout/MobileLayout";
 import { SignupPage } from "../login/SignupPage";
 import { ConfirmationRequired } from "../login/ConfirmationRequired";
+import { isDemoMode } from "../demo/demoMode";
 import { ImportPage } from "../misc/ImportPage";
 import { ChangelogPage } from "../misc/ChangelogPage";
 import {
@@ -61,6 +62,8 @@ import { CompanyShow } from "../companies/CompanyShow.tsx";
 import { NoteShowPage } from "../notes/NoteShowPage.tsx";
 
 const defaultStore = localStorageStore(undefined, "CRM");
+
+const legacyTitle = "Atomic CRM";
 
 export type CRMProps = {
   dataProvider?: CrmDataProvider;
@@ -149,7 +152,10 @@ export const CRM = ({
   // Seed the store with CRM prop values if not already stored
   // (backwards compatibility for prop-based config)
   useEffect(() => {
-    if (!store.getItem(CONFIGURATION_STORE_KEY)) {
+    const storedConfig = store.getItem<ConfigurationContextValue>(
+      CONFIGURATION_STORE_KEY,
+    );
+    if (!storedConfig) {
       store.setItem(CONFIGURATION_STORE_KEY, {
         companySectors,
         currency,
@@ -162,6 +168,14 @@ export const CRM = ({
         darkModeLogo,
         lightModeLogo,
       } satisfies ConfigurationContextValue);
+    } else if (storedConfig.title === legacyTitle) {
+      // Browsers seeded before the Gerko rename still hold the old name and logos
+      store.setItem(CONFIGURATION_STORE_KEY, {
+        ...storedConfig,
+        title,
+        darkModeLogo,
+        lightModeLogo,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store]);
@@ -291,8 +305,9 @@ const MobileAdmin = (
       },
     },
   });
+  // Demo data must never be cached next to, or restored over, real data
   const asyncStoragePersister = createAsyncStoragePersister({
-    storage: localStorage,
+    storage: isDemoMode() ? undefined : localStorage,
   });
 
   return (
