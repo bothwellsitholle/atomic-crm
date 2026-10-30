@@ -63,8 +63,8 @@ const DealShowContent = () => {
       <div className="space-y-2">
         {record.archived_at ? <ArchivedTitle /> : null}
         <div className="flex-1">
-          <div className="flex justify-between items-start mb-8">
-            <div className="flex items-center gap-4">
+          <div className="mb-6 flex flex-col items-start gap-3 sm:mb-8 sm:flex-row sm:justify-between">
+            <div className="flex min-w-0 items-center gap-4">
               <ReferenceField
                 source="company_id"
                 reference="companies"
@@ -72,9 +72,13 @@ const DealShowContent = () => {
               >
                 <CompanyAvatar />
               </ReferenceField>
-              <h2 className="text-xl font-semibold">{record.name}</h2>
+              <h2 className="break-words text-xl font-semibold">
+                {record.name}
+              </h2>
             </div>
-            <div className={`flex gap-2 ${record.archived_at ? "" : "pr-12"}`}>
+            <div
+              className={`flex shrink-0 gap-2 ${record.archived_at ? "" : "sm:pr-12"}`}
+            >
               {record.archived_at ? (
                 <>
                   <UnarchiveButton record={record} />
@@ -89,8 +93,8 @@ const DealShowContent = () => {
             </div>
           </div>
 
-          <div className="flex gap-8 m-4">
-            <div className="flex flex-col mr-10">
+          <div className="my-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:m-4 sm:flex sm:gap-8">
+            <div className="flex flex-col sm:mr-10">
               <span className="text-xs text-muted-foreground tracking-wide">
                 {translate("resources.deals.fields.expected_closing_date")}
               </span>
@@ -108,7 +112,7 @@ const DealShowContent = () => {
               </div>
             </div>
 
-            <div className="flex flex-col mr-10">
+            <div className="flex flex-col sm:mr-10">
               <span className="text-xs text-muted-foreground tracking-wide">
                 {translate("resources.deals.fields.amount")}
               </span>
@@ -124,7 +128,7 @@ const DealShowContent = () => {
             </div>
 
             {!!record.categories?.length && (
-              <div className="flex flex-col mr-10">
+              <div className="flex flex-col sm:mr-10">
                 <span className="text-xs text-muted-foreground tracking-wide">
                   {translate("resources.deals.fields.categories")}
                 </span>
@@ -134,7 +138,7 @@ const DealShowContent = () => {
               </div>
             )}
 
-            <div className="flex flex-col mr-10">
+            <div className="flex flex-col sm:mr-10">
               <span className="text-xs text-muted-foreground tracking-wide">
                 {translate("resources.deals.fields.stage")}
               </span>
@@ -145,8 +149,8 @@ const DealShowContent = () => {
           </div>
 
           {!!record.contact_ids?.length && (
-            <div className="m-4">
-              <div className="flex flex-col min-h-12 mr-10">
+            <div className="my-4 sm:m-4">
+              <div className="flex flex-col min-h-12 sm:mr-10">
                 <span className="text-xs text-muted-foreground tracking-wide">
                   {translate("resources.deals.fields.contact_ids")}
                 </span>
@@ -161,7 +165,7 @@ const DealShowContent = () => {
           )}
 
           {record.description && (
-            <div className="m-4 whitespace-pre-line">
+            <div className="my-4 sm:m-4 whitespace-pre-line">
               <span className="text-xs text-muted-foreground tracking-wide">
                 {translate("resources.deals.fields.description")}
               </span>
@@ -169,7 +173,7 @@ const DealShowContent = () => {
             </div>
           )}
 
-          <div className="m-4">
+          <div className="my-4 sm:m-4">
             <Separator className="mb-4" />
             <InfiniteListBase
               resource="deal_notes"

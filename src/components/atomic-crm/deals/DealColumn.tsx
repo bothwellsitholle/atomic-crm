@@ -34,7 +34,7 @@ export const DealColumn = ({
     stageAccents[stage] ??
     defaultStageAccents[Math.max(stageIndex, 0) % defaultStageAccents.length];
   return (
-    <div className="flex-1 min-w-0 flex flex-col rounded-xl bg-muted/70 p-2 pb-6">
+    <div className="w-[82vw] shrink-0 snap-start md:w-auto md:shrink md:flex-1 md:min-w-0 flex flex-col rounded-xl bg-muted/70 p-2 pb-6">
       <div className="px-1.5 pt-1 pb-2.5">
         <div className="flex items-center gap-2">
           <span className={`size-2 shrink-0 rounded-full ${accent}`} />

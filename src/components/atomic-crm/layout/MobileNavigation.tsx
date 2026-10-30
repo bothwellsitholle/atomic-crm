@@ -6,9 +6,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { Home, ListTodo, Plus, Settings, Users } from "lucide-react";
+import { Home, ListTodo, Plus, Settings, SquareKanban } from "lucide-react";
 import { useTranslate } from "ra-core";
-import { Link, matchPath, useLocation, useMatch } from "react-router";
+import {
+  Link,
+  matchPath,
+  useLocation,
+  useMatch,
+  useNavigate,
+} from "react-router";
 import { ContactCreateSheet } from "../contacts/ContactCreateSheet";
 import { useState } from "react";
 import { NoteCreateSheet } from "../notes/NoteCreateSheet";
@@ -61,12 +67,10 @@ export const MobileNavigation = () => {
             isActive={currentPath === "/"}
           />
           <NavigationButton
-            href="/contacts"
-            Icon={Users}
-            label={translate("resources.contacts.name", {
-              smart_count: 2,
-            })}
-            isActive={currentPath === "/contacts"}
+            href="/deals"
+            Icon={SquareKanban}
+            label={translate("crm.navigation.pipeline")}
+            isActive={currentPath === "/deals"}
           />
           <CreateButton />
           <NavigationButton
@@ -108,6 +112,7 @@ const NavigationButton = ({
 
 const CreateButton = () => {
   const translate = useTranslate();
+  const navigate = useNavigate();
   const contact_id = useMatch("/contacts/:id/*")?.params.id;
   const [contactCreateOpen, setContactCreateOpen] = useState(false);
   const [noteCreateOpen, setNoteCreateOpen] = useState(false);
@@ -150,6 +155,12 @@ const CreateButton = () => {
             }}
           >
             {translate("resources.contacts.forcedCaseName")}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="h-12 px-4 text-base"
+            onClick={() => navigate("/deals/create")}
+          >
+            {translate("resources.deals.name", { smart_count: 1 })}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="h-12 px-4 text-base"

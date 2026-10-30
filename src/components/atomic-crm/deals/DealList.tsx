@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { InputProps } from "ra-core";
 import {
+  ListBase,
   useCanAccess,
   useGetIdentity,
   useListContext,
@@ -18,6 +19,8 @@ import { SearchInput } from "@/components/admin/search-input";
 
 import { DataImportButton } from "../dataImport/DataImportButton";
 import { useConfigurationContext } from "../root/ConfigurationContext";
+import MobileHeader from "../layout/MobileHeader";
+import { MobileContent } from "../layout/MobileContent";
 import { TopToolbar } from "../layout/TopToolbar";
 import { AccountManagerInput } from "../sales/AccountManagerInput";
 import { DealArchivedList } from "./DealArchivedList";
@@ -90,6 +93,30 @@ const DealList = () => {
     >
       <DealLayout />
     </List>
+  );
+};
+
+export const DealListMobile = () => {
+  const { identity } = useGetIdentity();
+  const translate = useTranslate();
+
+  if (!identity) return null;
+
+  return (
+    <ListBase
+      perPage={100}
+      filter={{ "archived_at@is": null }}
+      sort={{ field: "index", order: "DESC" }}
+    >
+      <MobileHeader showRefresh>
+        <h1 className="text-xl font-semibold">
+          {translate("crm.navigation.pipeline")}
+        </h1>
+      </MobileHeader>
+      <MobileContent>
+        <DealLayout />
+      </MobileContent>
+    </ListBase>
   );
 };
 
