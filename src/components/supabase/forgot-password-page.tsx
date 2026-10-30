@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useResetPassword } from "ra-supabase-core";
 import { Form, required, useNotify, useRedirect, useTranslate } from "ra-core";
-import { Layout } from "@/components/supabase/layout";
+import { AuthHeading, Layout } from "@/components/supabase/layout";
+import { BackToSignIn } from "@/components/supabase/set-password-page";
 import type { FieldValues, SubmitHandler } from "react-hook-form";
 import { TextInput } from "@/components/admin/text-input";
 import { Button } from "@/components/ui/button";
@@ -55,36 +56,34 @@ export const ForgotPasswordPage = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {translate("ra-supabase.reset_password.forgot_password", {
-            _: "Forgot password?",
-          })}
-        </h1>
-        <p>
-          {translate("ra-supabase.reset_password.forgot_password_details", {
-            _: "Enter your email to receive a reset password link.",
-          })}
-        </p>
-      </div>
+      <AuthHeading
+        title={translate("ra-supabase.reset_password.forgot_password", {
+          _: "Forgot password?",
+        })}
+        details={translate("crm.auth.forgot_password_details")}
+      />
       <Form<FormData>
-        className="space-y-8"
+        className="space-y-6"
         onSubmit={submit as SubmitHandler<FieldValues>}
       >
         <TextInput
           source="email"
+          type="email"
           label={translate("ra.auth.email", {
             _: "Email",
           })}
           autoComplete="email"
           validate={required()}
         />
-        <Button type="submit" className="cursor-pointer" disabled={loading}>
-          {translate("crm.action.reset_password", {
-            _: "Reset password",
-          })}
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={loading}
+        >
+          {translate(loading ? "crm.auth.sending" : "crm.auth.send_reset_link")}
         </Button>
       </Form>
+      <BackToSignIn />
     </Layout>
   );
 };

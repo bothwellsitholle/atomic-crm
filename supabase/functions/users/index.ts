@@ -4,6 +4,7 @@ import { corsHeaders, OptionsMiddleware } from "../_shared/cors.ts";
 import { createErrorResponse } from "../_shared/utils.ts";
 import { AuthMiddleware, UserMiddleware } from "../_shared/authentication.ts";
 import { getUserSale } from "../_shared/getUserSale.ts";
+import postgres from "npm:postgres@3.4.5";
 import {
   findInvalidEmail,
   MAX_SECONDARY_EMAILS,
@@ -249,6 +250,83 @@ async function inviteUser(req: Request, currentUserSale: any) {
   }
 }
 
+const jsonResponse = (body: unknown) =>
+  new Response(JSON.stringify(body), {
+    headers: { "Content-Type": "application/json", ...corsHeaders },
+  });
+
+async function listInviteStatuses(currentUserSale: any) {
+  if (!currentUserSale.administrator) {
+    return createErrorResponse(401, "Not Authorized");
+  }
+
+  const sql = postgres(Deno.env.get("SUPABASE_DB_URL")!, { max: 1 });
+  try {
+    const rows = await sql<
+      {
+        user_id: string;
+        has_password: boolean;
+        invited_at: string | null;
+        last_sign_in_at: string | null;
+      }[]
+    >`select id as user_id,
+        coalesce(encrypted_password, '') <> '' as has_password,
+        invited_at,
+        last_sign_in_at
+      from auth.users`;
+
+    return jsonResponse({
+      data: rows.map(({ has_password, ...row }) => ({
+        ...row,
+        status: has_password && row.last_sign_in_at ? "active" : "pending",
+      })),
+    });
+  } finally {
+    await sql.end();
+  }
+}
+
+async function resendInvite(sales_id: number, currentUserSale: any) {
+  if (!currentUserSale.administrator) {
+    return createErrorResponse(401, "Not Authorized");
+  }
+
+  const { data: sale } = await supabaseAdmin
+    .from("sales")
+    .select("user_id, email")
+    .eq("id", sales_id)
+    .single();
+
+  if (!sale) {
+    return createErrorResponse(404, "Not Found");
+  }
+
+  const { data: userData, error: userError } =
+    await supabaseAdmin.auth.admin.getUserById(sale.user_id);
+
+  if (!userData?.user || userError) {
+    console.error("Error fetching user to resend invite:", userError);
+    return createErrorResponse(404, "Not Found");
+  }
+
+  // Once the invite link has been opened the email is confirmed and Supabase
+  // refuses a second invite, so a password setup (recovery) email is sent instead.
+  const { error: emailError } = userData.user.email_confirmed_at
+    ? await supabaseAdmin.auth.resetPasswordForEmail(sale.email)
+    : await supabaseAdmin.auth.admin.inviteUserByEmail(sale.email);
+
+  if (emailError) {
+    console.error("Error resending invite:", emailError);
+    return createErrorResponse(
+      emailError.status ?? 500,
+      "Failed to send invitation mail",
+      { code: emailError.code },
+    );
+  }
+
+  return jsonResponse({ data: { email: sale.email } });
+}
+
 async function patchUser(req: Request, currentUserSale: any) {
   const {
     sales_id,
@@ -416,6 +494,15 @@ Deno.serve(async (req: Request) =>
         }
 
         try {
+          if (req.method === "GET") {
+            return await listInviteStatuses(currentUserSale);
+          }
+
+          if (req.method === "PUT") {
+            const { sales_id } = await req.json();
+            return await resendInvite(sales_id, currentUserSale);
+          }
+
           if (req.method === "POST") {
             return await inviteUser(req, currentUserSale);
           }

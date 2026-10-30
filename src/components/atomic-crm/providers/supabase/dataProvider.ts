@@ -12,6 +12,7 @@ import type {
   DealNote,
   RAFile,
   Sale,
+  SaleInviteStatus,
   SalesFormData,
   SearchResourceName,
   SearchResult,
@@ -206,6 +207,33 @@ const getDataProviderWithCustomMethods = () => {
       }
 
       return passwordUpdated;
+    },
+    async salesGetInviteStatuses() {
+      const { data, error } = await getSupabaseClient().functions.invoke<{
+        data: SaleInviteStatus[];
+      }>("users", { method: "GET" });
+
+      if (!data || error) {
+        console.error("salesGetInviteStatuses.error", error);
+        throw new Error("Failed to load invite statuses");
+      }
+
+      return data.data;
+    },
+    async salesResendInvite(id: Identifier) {
+      const { data, error } = await getSupabaseClient().functions.invoke<{
+        data: { email: string };
+      }>("users", {
+        method: "PUT",
+        body: { sales_id: id },
+      });
+
+      if (!data || error) {
+        console.error("salesResendInvite.error", error);
+        throw new Error("Failed to resend the invitation");
+      }
+
+      return data.data;
     },
     async unarchiveDeal(deal: Deal) {
       // get all deals where stage is the same as the deal to unarchive

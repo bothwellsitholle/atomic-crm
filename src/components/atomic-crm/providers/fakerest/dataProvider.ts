@@ -15,6 +15,7 @@ import type {
   Deal,
   DealNote,
   Sale,
+  SaleInviteStatus,
   SalesFormData,
   SearchResourceName,
   SearchResult,
@@ -309,6 +310,23 @@ export const createDataProvider = ({
       });
 
       return true;
+    },
+    salesGetInviteStatuses: async (): Promise<SaleInviteStatus[]> => {
+      const { data: sales } = await dataProvider.getList<Sale>("sales", {
+        filter: {},
+        pagination: { page: 1, perPage: 1000 },
+        sort: { field: "id", order: "ASC" },
+      });
+      return sales.map((sale) => ({
+        user_id: sale.user_id ?? sale.id.toString(),
+        status: "active",
+        invited_at: null,
+        last_sign_in_at: null,
+      }));
+    },
+    salesResendInvite: async (id: Identifier): Promise<{ email: string }> => {
+      const { data: sale } = await dataProvider.getOne<Sale>("sales", { id });
+      return { email: sale.email };
     },
     globalSearch: async (
       query: string,

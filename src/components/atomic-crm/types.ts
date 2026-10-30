@@ -51,6 +51,13 @@ export type Sale = {
   password?: string;
 } & Pick<RaRecord, "id">;
 
+export type SaleInviteStatus = {
+  user_id: string;
+  status: "pending" | "active";
+  invited_at: string | null;
+  last_sign_in_at: string | null;
+};
+
 export type Company = {
   name: string;
   logo: RAFile;
