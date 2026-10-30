@@ -52,6 +52,7 @@ import ImageEditorField from "../misc/ImageEditorField";
 import type { CrmDataProvider } from "../providers/types";
 import { getSalesErrorNotification } from "../sales/salesErrorNotification";
 import type { SalesFormData } from "../types";
+import { InstallAppButton, InstallAppDialog } from "../misc/InstallApp";
 
 const ChangePasswordButton = () => {
   const translate = useTranslate();
@@ -120,6 +121,7 @@ export const SettingsPageMobile = () => {
           </div>
 
           <div className="mt-auto pt-6 space-y-3 mb-4">
+            <InstallAppButton />
             <ChangePasswordButton />
             <Button
               variant="destructive"
@@ -132,6 +134,7 @@ export const SettingsPageMobile = () => {
           </div>
         </div>
       </MobileContent>
+      <InstallAppDialog />
     </>
   );
 };

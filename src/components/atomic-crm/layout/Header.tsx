@@ -18,6 +18,7 @@ import { enterDemoMode, exitDemoMode, isDemoMode } from "../demo/demoMode";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import { ImportPage } from "../misc/ImportPage";
 import { ChangelogPage } from "../misc/ChangelogPage";
+import { InstallAppDialog, InstallAppMenuItem } from "../misc/InstallApp";
 import { GlobalSearchButton } from "../search/GlobalSearchButton";
 
 const Header = () => {
@@ -102,6 +103,7 @@ const Header = () => {
                   <CanAccess resource="configuration" action="edit">
                     <SettingsMenu />
                   </CanAccess>
+                  <InstallAppMenuItem />
                   <DemoModeMenuItem />
                   <ImportFromJsonMenuItem />
                   <ChangelogMenuItem />
@@ -111,6 +113,7 @@ const Header = () => {
           </div>
         </header>
       </nav>
+      <InstallAppDialog />
     </>
   );
 };

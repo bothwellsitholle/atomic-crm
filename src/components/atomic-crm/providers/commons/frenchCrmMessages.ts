@@ -636,6 +636,16 @@ export const frenchCrmMessages = {
       system: "Système",
     },
     language: "Langue",
+    install: {
+      action: "Installer l'application",
+      title: "Installer Gerko CRM",
+      description:
+        "Ajoutez Gerko CRM à votre écran d'accueil. Il s'ouvre en plein écran, comme une application, et reste toujours à jour.",
+      ios_step_share: "Touchez le bouton Partager dans la barre de Safari",
+      ios_step_add: "Choisissez Sur l'écran d'accueil, puis touchez Ajouter",
+      other_step:
+        "Ouvrez le menu du navigateur et choisissez Installer l'application (ou Ajouter à l'écran d'accueil)",
+    },
     navigation: {
       label: "Navigation CRM",
       pipeline: "Pipeline",

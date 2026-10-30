@@ -622,6 +622,16 @@ export const englishCrmMessages = {
       system: "System",
     },
     language: "Language",
+    install: {
+      action: "Install app",
+      title: "Install Gerko CRM",
+      description:
+        "Add Gerko CRM to your home screen. It opens full screen, like an app, and always runs the latest version.",
+      ios_step_share: "Tap the Share button in Safari's toolbar",
+      ios_step_add: "Choose Add to Home Screen, then tap Add",
+      other_step:
+        "Open your browser menu and choose Install app (or Add to Home screen)",
+    },
     navigation: {
       label: "CRM navigation",
       pipeline: "Pipeline",
