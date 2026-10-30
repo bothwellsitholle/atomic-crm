@@ -4,6 +4,15 @@ import "./index.css";
 import App from "./App.tsx";
 import { registerSW } from "virtual:pwa-register";
 
+// Invite and password links that skip auth-callback.html land here as
+// "#access_token=...". Supabase would sign the user in silently and they would
+// never choose a password, so route them through the callback page instead.
+if (/^#access_token=.*type=(invite|recovery)/.test(window.location.hash)) {
+  window.location.replace(
+    `${window.location.pathname}#/auth-callback?${window.location.hash.slice(1)}`,
+  );
+}
+
 // After a new deploy, the service worker may replace its pre-cache while
 // the page still holds old chunk references. A reload picks up the new
 // HTML + new SW cache. A sessionStorage guard prevents infinite loops.

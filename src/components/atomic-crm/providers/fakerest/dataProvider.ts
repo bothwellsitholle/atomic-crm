@@ -328,6 +328,18 @@ export const createDataProvider = ({
       const { data: sale } = await dataProvider.getOne<Sale>("sales", { id });
       return { email: sale.email };
     },
+    salesDelete: async (id: Identifier): Promise<{ id: Identifier }> => {
+      const { data: previousData } = await dataProvider.getOne<Sale>("sales", {
+        id,
+      });
+      const identity = await getIdentity();
+      await dataProvider.delete("sales", {
+        id,
+        previousData,
+        meta: { identity },
+      });
+      return { id };
+    },
     globalSearch: async (
       query: string,
       resources: readonly SearchResourceName[],

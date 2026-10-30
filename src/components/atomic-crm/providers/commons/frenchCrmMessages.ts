@@ -324,6 +324,22 @@ export const frenchCrmMessages = {
         error: "Impossible d'envoyer l'invitation. Veuillez réessayer.",
         never_signed_in: "Jamais connecté",
         last_sign_in: "Dernière connexion %{time}",
+        error_with_reason: "Impossible d'envoyer l'invitation : %{reason}",
+      },
+      manage: {
+        actions: "Actions utilisateur",
+        disable: "Désactiver l'utilisateur",
+        enable: "Réactiver l'utilisateur",
+        disabled: "%{name} est désactivé et ne peut plus se connecter",
+        enabled: "%{name} peut de nouveau se connecter",
+        update_error:
+          "Impossible de mettre à jour l'utilisateur. Veuillez réessayer.",
+        delete: "Supprimer l'utilisateur",
+        delete_title: "Supprimer %{name} ?",
+        delete_content:
+          "Son compte sera supprimé définitivement. Un utilisateur qui possède des contacts, entreprises, pistes ou notes ne peut pas être supprimé ; désactivez-le plutôt.",
+        deleted: "%{name} a été supprimé",
+        delete_error: "Impossible de supprimer l'utilisateur : %{reason}",
       },
     },
     tasks: {

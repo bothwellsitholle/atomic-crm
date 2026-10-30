@@ -319,6 +319,21 @@ export const englishCrmMessages = {
         error: "Could not send the invitation. Please try again.",
         never_signed_in: "Never signed in",
         last_sign_in: "Last signed in %{time}",
+        error_with_reason: "Could not send the invitation: %{reason}",
+      },
+      manage: {
+        actions: "User actions",
+        disable: "Disable user",
+        enable: "Enable user",
+        disabled: "%{name} is disabled and can no longer sign in",
+        enabled: "%{name} can sign in again",
+        update_error: "Could not update the user. Please try again.",
+        delete: "Delete user",
+        delete_title: "Delete %{name}?",
+        delete_content:
+          "This removes their account for good. Users who own contacts, companies, leads or notes can't be deleted; disable them instead.",
+        deleted: "%{name} was deleted",
+        delete_error: "Could not delete the user: %{reason}",
       },
     },
     tasks: {

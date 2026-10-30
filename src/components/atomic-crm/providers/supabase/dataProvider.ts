@@ -230,7 +230,29 @@ const getDataProviderWithCustomMethods = () => {
 
       if (!data || error) {
         console.error("salesResendInvite.error", error);
-        throw new Error("Failed to resend the invitation");
+        throw new Error(
+          (await readFunctionError(error))?.message ||
+            "Failed to resend the invitation",
+        );
+      }
+
+      return data.data;
+    },
+    async salesDelete(id: Identifier) {
+      const { data, error } = await getSupabaseClient().functions.invoke<{
+        data: { id: Identifier };
+      }>("users", {
+        method: "DELETE",
+        body: { sales_id: id },
+      });
+
+      if (!data || error) {
+        console.error("salesDelete.error", error);
+        const details = await readFunctionError(error);
+        throw Object.assign(
+          new Error(details?.message || "Failed to delete the user"),
+          { code: details?.code },
+        );
       }
 
       return data.data;
@@ -312,6 +334,16 @@ const getDataProviderWithCustomMethods = () => {
       return data.config as ConfigurationContextValue;
     },
   } satisfies DataProvider;
+};
+
+const readFunctionError = async (
+  error: unknown,
+): Promise<{ message?: string; code?: string } | undefined> => {
+  try {
+    return await (error as { context?: Response })?.context?.json();
+  } catch {
+    return undefined;
+  }
 };
 
 export type CrmDataProvider = ReturnType<

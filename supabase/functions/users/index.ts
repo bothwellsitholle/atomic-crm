@@ -286,7 +286,11 @@ async function listInviteStatuses(currentUserSale: any) {
   }
 }
 
-async function resendInvite(sales_id: number, currentUserSale: any) {
+async function resendInvite(
+  sales_id: number,
+  currentUserSale: any,
+  origin: string | null,
+) {
   if (!currentUserSale.administrator) {
     return createErrorResponse(401, "Not Authorized");
   }
@@ -309,22 +313,102 @@ async function resendInvite(sales_id: number, currentUserSale: any) {
     return createErrorResponse(404, "Not Found");
   }
 
-  // Once the invite link has been opened the email is confirmed and Supabase
-  // refuses a second invite, so a password setup (recovery) email is sent instead.
-  const { error: emailError } = userData.user.email_confirmed_at
-    ? await supabaseAdmin.auth.resetPasswordForEmail(sale.email)
-    : await supabaseAdmin.auth.admin.inviteUserByEmail(sale.email);
+  const redirectTo = origin ? `${origin}/auth-callback.html` : undefined;
+  const sendPasswordSetup = () =>
+    supabaseAdmin.auth.resetPasswordForEmail(sale.email, { redirectTo });
+
+  // Supabase refuses a second invite once the email is confirmed, so those
+  // users get a password setup (recovery) email instead.
+  let { error: emailError } = userData.user.email_confirmed_at
+    ? await sendPasswordSetup()
+    : await supabaseAdmin.auth.admin.inviteUserByEmail(sale.email, {
+        redirectTo,
+      });
+
+  if (emailError?.code === "email_exists") {
+    ({ error: emailError } = await sendPasswordSetup());
+  }
 
   if (emailError) {
     console.error("Error resending invite:", emailError);
     return createErrorResponse(
       emailError.status ?? 500,
-      "Failed to send invitation mail",
+      emailError.message || "Failed to send invitation mail",
       { code: emailError.code },
     );
   }
 
   return jsonResponse({ data: { email: sale.email } });
+}
+
+const OWNED_RECORD_TABLES = [
+  "contacts",
+  "companies",
+  "deals",
+  "contact_notes",
+  "deal_notes",
+] as const;
+
+async function deleteUser(sales_id: number, currentUserSale: any) {
+  if (!currentUserSale.administrator) {
+    return createErrorResponse(401, "Not Authorized");
+  }
+  if (currentUserSale.id === sales_id) {
+    return createErrorResponse(400, "You cannot delete your own account", {
+      code: "cannot_delete_self",
+    });
+  }
+
+  const { data: sale } = await supabaseAdmin
+    .from("sales")
+    .select("id, user_id")
+    .eq("id", sales_id)
+    .single();
+
+  if (!sale) {
+    return createErrorResponse(404, "Not Found");
+  }
+
+  const counts = await Promise.all(
+    OWNED_RECORD_TABLES.map(async (table) => {
+      const { count, error } = await supabaseAdmin
+        .from(table)
+        .select("id", { count: "exact", head: true })
+        .eq("sales_id", sales_id);
+      if (error) throw error;
+      return count ?? 0;
+    }),
+  );
+  const ownedRecords = counts.reduce((total, count) => total + count, 0);
+
+  // Deleting would cascade-delete their contact notes and fail on the rest,
+  // so users who own anything must be disabled instead.
+  if (ownedRecords > 0) {
+    return createErrorResponse(
+      409,
+      `This user owns ${ownedRecords} records. Disable them instead.`,
+      { code: "user_has_records", count: ownedRecords },
+    );
+  }
+
+  const { error: saleError } = await supabaseAdmin
+    .from("sales")
+    .delete()
+    .eq("id", sales_id);
+  if (saleError) {
+    console.error("Error deleting sale:", saleError);
+    return createErrorResponse(500, "Internal Server Error");
+  }
+
+  const { error: userError } = await supabaseAdmin.auth.admin.deleteUser(
+    sale.user_id,
+  );
+  if (userError) {
+    console.error("Error deleting auth user:", userError);
+    return createErrorResponse(500, "Internal Server Error");
+  }
+
+  return jsonResponse({ data: { id: sales_id } });
 }
 
 async function patchUser(req: Request, currentUserSale: any) {
@@ -500,7 +584,16 @@ Deno.serve(async (req: Request) =>
 
           if (req.method === "PUT") {
             const { sales_id } = await req.json();
-            return await resendInvite(sales_id, currentUserSale);
+            return await resendInvite(
+              sales_id,
+              currentUserSale,
+              req.headers.get("origin"),
+            );
+          }
+
+          if (req.method === "DELETE") {
+            const { sales_id } = await req.json();
+            return await deleteUser(sales_id, currentUserSale);
           }
 
           if (req.method === "POST") {
