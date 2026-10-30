@@ -127,7 +127,7 @@ export const InstallAppButton = () => {
   return (
     <Button
       variant="outline"
-      className="w-full text-base h-auto"
+      className="w-full h-12 text-base"
       onClick={install}
     >
       <Download className="size-5 mr-3" />

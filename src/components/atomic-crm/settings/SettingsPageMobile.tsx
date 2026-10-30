@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTheme } from "@/components/admin/use-theme";
-import { ChevronRight, KeyRound } from "lucide-react";
+import { ChevronRight, KeyRound, Loader2 } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -60,7 +60,7 @@ const ChangePasswordButton = () => {
   const { identity } = useGetIdentity();
   const dataProvider = useDataProvider<CrmDataProvider>();
 
-  const { mutate: updatePassword } = useMutation({
+  const { mutate: updatePassword, isPending } = useMutation({
     mutationKey: ["updatePassword"],
     mutationFn: async () => {
       if (!identity) {
@@ -87,10 +87,15 @@ const ChangePasswordButton = () => {
   return (
     <Button
       variant="outline"
-      className="w-full text-base h-auto"
+      className="w-full h-12 text-base"
       onClick={() => updatePassword()}
+      disabled={isPending}
     >
-      <KeyRound className="size-5 mr-3" />
+      {isPending ? (
+        <Loader2 className="size-5 mr-3 animate-spin" />
+      ) : (
+        <KeyRound className="size-5 mr-3" />
+      )}
       {translate("crm.profile.password.change")}
     </Button>
   );
@@ -125,7 +130,7 @@ export const SettingsPageMobile = () => {
             <ChangePasswordButton />
             <Button
               variant="destructive"
-              className="w-full text-base h-auto"
+              className="w-full h-12 text-base"
               onClick={() => logout()}
             >
               <LogOut className="size-5 mr-3" />

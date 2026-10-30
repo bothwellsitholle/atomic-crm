@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Check, CircleX, Copy, Pencil, Save } from "lucide-react";
+import { Check, CircleX, Copy, Loader2, Pencil, Save } from "lucide-react";
 import {
   email,
   Form,
@@ -49,7 +49,7 @@ export const ProfilePage = () => {
   const notify = useNotify();
   const dataProvider = useDataProvider<CrmDataProvider>();
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationKey: ["signup"],
     mutationFn: async (data: SalesFormData) => {
       if (!identity) {
@@ -85,7 +85,8 @@ export const ProfilePage = () => {
   if (!identity) return null;
 
   const handleOnSubmit = async (values: any) => {
-    mutate(values);
+    // Awaited so the Save button shows its spinner; onError reports failures
+    await mutateAsync(values).catch(() => undefined);
   };
 
   return (
@@ -108,34 +109,35 @@ const ProfileForm = ({
   const translate = useTranslate();
   const record = useRecordContext<Sale>();
   const { identity, refetch } = useGetIdentity();
-  const { isDirty } = useFormState();
+  const { isDirty, isSubmitting } = useFormState();
   const dataProvider = useDataProvider<CrmDataProvider>();
 
-  const { mutate: updatePassword } = useMutation({
-    mutationKey: ["updatePassword"],
-    mutationFn: async () => {
-      if (!identity) {
-        throw new Error(
-          translate("crm.profile.record_not_found", {
-            _: "Record not found",
-          }),
-        );
-      }
-      return dataProvider.updatePassword(identity.id);
-    },
-    onSuccess: () => {
-      notify("crm.profile.password_reset_sent", {
-        messageArgs: {
-          _: "A reset password email has been sent to your email address",
-        },
-      });
-    },
-    onError: (e) => {
-      notify(`${e}`, {
-        type: "error",
-      });
-    },
-  });
+  const { mutate: updatePassword, isPending: isSendingPasswordReset } =
+    useMutation({
+      mutationKey: ["updatePassword"],
+      mutationFn: async () => {
+        if (!identity) {
+          throw new Error(
+            translate("crm.profile.record_not_found", {
+              _: "Record not found",
+            }),
+          );
+        }
+        return dataProvider.updatePassword(identity.id);
+      },
+      onSuccess: () => {
+        notify("crm.profile.password_reset_sent", {
+          messageArgs: {
+            _: "A reset password email has been sent to your email address",
+          },
+        });
+      },
+      onError: (e) => {
+        notify(`${e}`, {
+          type: "error",
+        });
+      },
+    });
 
   const { mutate: mutateSale } = useMutation({
     mutationKey: ["signup"],
@@ -209,7 +211,11 @@ const ProfileForm = ({
                   variant="outline"
                   type="button"
                   onClick={handleClickOpenPasswordChange}
+                  disabled={isSendingPasswordReset}
                 >
+                  {isSendingPasswordReset ? (
+                    <Loader2 className="animate-spin" />
+                  ) : null}
                   {translate("crm.profile.password.change")}
                 </Button>
               </>
@@ -228,8 +234,12 @@ const ProfileForm = ({
             </Button>
 
             {isEditMode && (
-              <Button type="submit" disabled={!isDirty} variant="outline">
-                <Save />
+              <Button
+                type="submit"
+                disabled={!isDirty || isSubmitting}
+                variant="outline"
+              >
+                {isSubmitting ? <Loader2 className="animate-spin" /> : <Save />}
                 {translate("ra.action.save")}
               </Button>
             )}

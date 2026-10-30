@@ -1,6 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { Ban, Ellipsis, Pencil, RotateCcw, Send, Trash2 } from "lucide-react";
+import {
+  Ban,
+  Ellipsis,
+  Loader2,
+  Pencil,
+  RotateCcw,
+  Send,
+  Trash2,
+} from "lucide-react";
 import {
   useDataProvider,
   useGetIdentity,
@@ -174,6 +182,9 @@ const RowActions = (_props: { label?: string | boolean }) => {
 
   if (!record) return null;
   const isSelf = identity?.id === record.id;
+  // The menu closes on click, so the trigger itself shows the request running
+  const isBusy =
+    resend.isPending || toggleDisabled.isPending || remove.isPending;
   const canResend = inviteStatus?.status === "pending" && !record.disabled;
 
   return (
@@ -186,11 +197,13 @@ const RowActions = (_props: { label?: string | boolean }) => {
               variant="ghost"
               size="icon"
               className="size-8"
+              disabled={isBusy}
               aria-label={translate("resources.sales.manage.actions")}
+              aria-busy={isBusy}
             />
           }
         >
-          <Ellipsis />
+          {isBusy ? <Loader2 className="animate-spin" /> : <Ellipsis />}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-44">
           <DropdownMenuItem

@@ -480,6 +480,10 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/misc/InstallApp.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/misc/InfinitePagination.tsx",
           "type": "registry:component"
         },

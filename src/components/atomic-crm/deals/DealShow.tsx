@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { isValid } from "date-fns";
-import { Archive, ArchiveRestore } from "lucide-react";
+import { Archive, ArchiveRestore, Loader2 } from "lucide-react";
 import {
   InfiniteListBase,
   ShowBase,
@@ -206,7 +206,7 @@ const ArchivedTitle = () => {
 
 const ArchiveButton = ({ record }: { record: Deal }) => {
   const translate = useTranslate();
-  const [update] = useUpdate();
+  const [update, { isPending }] = useUpdate();
   const redirect = useRedirect();
   const notify = useNotify();
   const refresh = useRefresh();
@@ -242,8 +242,13 @@ const ArchiveButton = ({ record }: { record: Deal }) => {
       size="sm"
       variant="outline"
       className="flex items-center gap-2 h-9"
+      disabled={isPending}
     >
-      <Archive className="w-4 h-4" />
+      {isPending ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <Archive className="w-4 h-4" />
+      )}
       {translate("resources.deals.archived.action")}
     </Button>
   );
@@ -256,7 +261,7 @@ const UnarchiveButton = ({ record }: { record: Deal }) => {
   const notify = useNotify();
   const refresh = useRefresh();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: () => dataProvider.unarchiveDeal(record),
     onSuccess: () => {
       redirect("list", "deals");
@@ -283,8 +288,13 @@ const UnarchiveButton = ({ record }: { record: Deal }) => {
       size="sm"
       variant="outline"
       className="flex items-center gap-2 h-9"
+      disabled={isPending}
     >
-      <ArchiveRestore className="w-4 h-4" />
+      {isPending ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <ArchiveRestore className="w-4 h-4" />
+      )}
       {translate("resources.deals.unarchived.action")}
     </Button>
   );

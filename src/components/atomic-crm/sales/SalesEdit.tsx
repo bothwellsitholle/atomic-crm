@@ -35,7 +35,7 @@ export function SalesEdit() {
   const redirect = useRedirect();
   const translate = useTranslate();
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationKey: ["signup"],
     mutationFn: async (data: SalesFormData) => {
       if (!record) {
@@ -68,7 +68,8 @@ export function SalesEdit() {
   });
 
   const onSubmit: SubmitHandler<SalesFormData> = async (data) => {
-    mutate(data);
+    // Awaited so the Save button shows its spinner; onError reports failures
+    await mutateAsync(data).catch(() => undefined);
   };
 
   return (
