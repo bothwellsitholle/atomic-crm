@@ -2,11 +2,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   CreateBase,
   Form,
-  useCreateContext,
   useDataProvider,
   useGetIdentity,
   useListContext,
   useRedirect,
+  useTranslate,
   type GetListResult,
 } from "ra-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -85,7 +85,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
             }}
           >
             <DealInputs />
-            <FormToolbar />
+            <FormToolbar saveLabel="resources.deals.action.create" />
           </Form>
         </CreateBase>
       </DialogContent>
@@ -94,8 +94,10 @@ export const DealCreate = ({ open }: { open: boolean }) => {
 };
 
 const CreateHeader = () => {
-  const { defaultTitle } = useCreateContext();
+  const translate = useTranslate();
   return (
-    <DialogTitle className="text-xl font-semibold">{defaultTitle}</DialogTitle>
+    <DialogTitle className="text-xl font-semibold">
+      {translate("resources.deals.action.new")}
+    </DialogTitle>
   );
 };

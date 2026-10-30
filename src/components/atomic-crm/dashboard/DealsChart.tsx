@@ -29,6 +29,15 @@ export const DealsChart = memo(() => {
     : [DEFAULT_LOCALE];
   const wonLabel = findDealLabel(dealStages, "won") ?? "Won";
   const lostLabel = findDealLabel(dealStages, "lost") ?? "Lost";
+  const axisFormatter = new Intl.NumberFormat(
+    acceptedLanguages.at(0) ?? DEFAULT_LOCALE,
+    {
+      style: "currency",
+      currency,
+      notation: "compact",
+      maximumFractionDigits: 1,
+    },
+  );
 
   const { data, isPending } = useGetList<Deal>("deals", {
     pagination: { perPage: 100, page: 1 },
@@ -108,7 +117,7 @@ export const DealsChart = memo(() => {
           padding={0.3}
           valueScale={{
             type: "linear",
-            min: range.min * 1.2,
+            min: Math.min(range.min * 1.2, -range.max * 0.2),
             max: range.max * 1.2,
           }}
           indexScale={{ type: "band", round: true }}
@@ -124,22 +133,7 @@ export const DealsChart = memo(() => {
               })}
             </div>
           )}
-          axisTop={{
-            tickSize: 0,
-            tickPadding: 12,
-            style: {
-              ticks: {
-                text: {
-                  fill: "var(--color-muted-foreground)",
-                },
-              },
-              legend: {
-                text: {
-                  fill: "var(--color-muted-foreground)",
-                },
-              },
-            },
-          }}
+          axisTop={null}
           axisBottom={{
             legendPosition: "middle",
             legendOffset: 50,
@@ -160,7 +154,7 @@ export const DealsChart = memo(() => {
           }}
           axisLeft={null}
           axisRight={{
-            format: (v: any) => `${Math.abs(v / 1000)}k`,
+            format: (v: number) => axisFormatter.format(Math.abs(v)),
             tickValues: 8,
             style: {
               ticks: {

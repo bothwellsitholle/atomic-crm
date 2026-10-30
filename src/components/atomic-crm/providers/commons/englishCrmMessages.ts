@@ -1,4 +1,9 @@
 export const englishCrmMessages = {
+  ra: {
+    page: {
+      dashboard: "Overview",
+    },
+  },
   resources: {
     companies: {
       name: "Company |||| Companies",
@@ -47,7 +52,7 @@ export const englishCrmMessages = {
       followed_by_you: "Followed by you",
       no_contacts: "No contact",
       nb_contacts: "%{smart_count} contact |||| %{smart_count} contacts",
-      nb_deals: "%{smart_count} deal |||| %{smart_count} deals",
+      nb_deals: "%{smart_count} lead |||| %{smart_count} leads",
       sizes: {
         one_employee: "1 employee",
         two_to_nine_employees: "2-9 employees",
@@ -181,52 +186,52 @@ export const englishCrmMessages = {
       },
     },
     deals: {
-      name: "Deal |||| Deals",
+      name: "Lead |||| Leads",
       fields: {
         name: "Name",
         description: "Description",
         company_id: "Company",
         contact_ids: "Contacts",
         categories: "Categories",
-        amount: "Budget",
+        amount: "Value",
         expected_closing_date: "Expected closing date",
         stage: "Stage",
       },
       action: {
-        back_to_deal: "Back to deal",
-        create: "Create deal",
-        new: "New Deal",
+        back_to_deal: "Back to lead",
+        create: "Create lead",
+        new: "New Lead",
       },
       field_categories: {
         misc: "Misc",
       },
       filters: {
-        only_mine: "Only deals I manage",
+        only_mine: "Only leads I manage",
       },
       archived: {
         action: "Archive",
-        error: "Error: deal not archived",
-        list_title: "Archived Deals",
-        success: "Deal archived",
-        title: "Archived Deal",
-        view: "View archived deals",
+        error: "Error: lead not archived",
+        list_title: "Archived Leads",
+        success: "Lead archived",
+        title: "Archived Lead",
+        view: "View archived leads",
       },
       inputs: {
         linked_to: "Linked to",
       },
       unarchived: {
         action: "Send back to the board",
-        error: "Error: deal not unarchived",
-        success: "Deal unarchived",
+        error: "Error: lead not unarchived",
+        success: "Lead unarchived",
       },
-      updated: "Deal updated",
+      updated: "Lead updated",
       empty: {
-        before_create: "before creating a deal.",
-        description: "It seems your deal list is empty.",
-        title: "No deals found",
+        before_create: "before creating a lead.",
+        description: "It seems your pipeline is empty.",
+        title: "No leads found",
       },
       import: {
-        title: "Import deals",
+        title: "Import leads",
       },
       invalid_date: "Invalid date",
     },
@@ -238,7 +243,7 @@ export const englishCrmMessages = {
         date: "Date",
         attachments: "Attachments",
         contact_id: "Contact",
-        deal_id: "Deal",
+        deal_id: "Lead",
       },
       action: {
         add: "Add note",
@@ -289,6 +294,7 @@ export const englishCrmMessages = {
         secondary_emails: "Secondary emails",
         administrator: "Admin",
         disabled: "Disabled",
+        status: "Status",
       },
       create: {
         error: "An error occurred while creating the user.",
@@ -304,6 +310,15 @@ export const englishCrmMessages = {
       },
       action: {
         new: "New user",
+      },
+      invite: {
+        active: "Active",
+        pending: "Invite pending",
+        resend: "Resend invite",
+        sent: "Invitation sent to %{email}",
+        error: "Could not send the invitation. Please try again.",
+        never_signed_in: "Never signed in",
+        last_sign_in: "Last signed in %{time}",
       },
     },
     tasks: {
@@ -370,6 +385,27 @@ export const englishCrmMessages = {
       reset_password: "Reset Password",
     },
     auth: {
+      back_to_sign_in: "Back to sign in",
+      forgot_password_details:
+        "Enter your email and we'll send you a link to choose a new password.",
+      send_reset_link: "Send reset link",
+      sending: "Sending...",
+      set_password: {
+        invite_title: "Welcome to %{title}",
+        invite_details: "Choose a password to finish setting up your account.",
+        invite_submit: "Create my account",
+        recovery_title: "Choose a new password",
+        recovery_details: "Enter a new password for your account.",
+        recovery_submit: "Save new password",
+        saving: "Saving...",
+        password_hint: "Use at least %{count} characters.",
+        password_too_short: "This password is too short.",
+        link_invalid:
+          "This link has expired or was already used. Ask for a new one below.",
+        missing_link:
+          "This link is incomplete. Open it again from your email, or ask for a new one.",
+        request_new_link: "Send me a new link",
+      },
       first_name: "First name",
       last_name: "Last name",
       confirm_password: "Confirm password",
@@ -416,17 +452,17 @@ export const englishCrmMessages = {
       you_added_contact: "You added",
       added_note: "%{name} added a note about",
       you_added_note: "You added a note about",
-      added_note_about_deal: "%{name} added a note about deal",
-      you_added_note_about_deal: "You added a note about deal",
-      added_deal: "%{name} added deal",
-      you_added_deal: "You added deal",
+      added_note_about_deal: "%{name} added a note about lead",
+      you_added_note_about_deal: "You added a note about lead",
+      added_deal: "%{name} added lead",
+      you_added_deal: "You added lead",
       at_company: "at",
       to: "to",
       load_more: "Load more activity",
     },
     dashboard: {
-      deals_chart: "Upcoming Deal Revenue",
-      deals_pipeline: "Deals Pipeline",
+      deals_chart: "Expected Revenue",
+      deals_pipeline: "Pipeline",
       latest_activity: "Latest Activity",
       latest_activity_error: "Error loading latest activity",
       latest_notes: "My Latest Notes",
@@ -471,7 +507,7 @@ export const englishCrmMessages = {
     },
     search: {
       title: "Search",
-      placeholder: "Search contacts, companies, deals, tasks and notes...",
+      placeholder: "Search contacts, companies, leads, tasks and notes...",
       hint: "Type at least %{min} characters to search",
       empty: "No result found",
       error: "Search is unavailable right now. Please try again.",
@@ -480,10 +516,10 @@ export const englishCrmMessages = {
       groups: {
         contacts: "Contacts",
         companies: "Companies",
-        deals: "Deals",
+        deals: "Leads",
         tasks: "Tasks",
         contact_notes: "Contact notes",
-        deal_notes: "Deal notes",
+        deal_notes: "Lead notes",
       },
     },
     image_editor: {
@@ -532,7 +568,7 @@ export const englishCrmMessages = {
         categories: "Categories",
         currency: "Currency",
         pipeline_help:
-          "Select which deal stages should count as pipeline deals.",
+          "Select which lead stages should count as pipeline leads.",
         pipeline_statuses: "Pipeline Statuses",
         stages: "Stages",
       },
@@ -556,7 +592,7 @@ export const englishCrmMessages = {
       validation: {
         duplicate: "Duplicate %{display_name}: %{items}",
         in_use:
-          "Cannot remove %{display_name} that are still used by deals: %{items}",
+          "Cannot remove %{display_name} that are still used by leads: %{items}",
         validating: "Validating\u2026",
         entities: {
           categories: "categories",
@@ -573,6 +609,7 @@ export const englishCrmMessages = {
     language: "Language",
     navigation: {
       label: "CRM navigation",
+      pipeline: "Pipeline",
     },
     profile: {
       add_secondary_email: "Add an email",

@@ -8,7 +8,7 @@ import { StoryWrapper, buildContact } from "@/test/StoryWrapper";
 
 import { GlobalSearchDialog } from "./GlobalSearchButton";
 
-const PLACEHOLDER = "Search contacts, companies, deals, tasks and notes...";
+const PLACEHOLDER = "Search contacts, companies, leads, tasks and notes...";
 
 const data = {
   companies: [
@@ -233,7 +233,7 @@ describe("GlobalSearchDialog", () => {
       .toBeVisible();
     await expect
       .element(
-        screen.getByRole("group", { name: "Deals" }).getByText("Zero Corp"),
+        screen.getByRole("group", { name: "Leads" }).getByText("Zero Corp"),
       )
       .toBeVisible();
   });
@@ -246,7 +246,7 @@ describe("GlobalSearchDialog", () => {
     await expect
       .element(
         screen
-          .getByRole("group", { name: "Deals" })
+          .getByRole("group", { name: "Leads" })
           .getByText("Boulangerie Martin"),
       )
       .toBeVisible();
@@ -273,7 +273,7 @@ describe("GlobalSearchDialog", () => {
     await screen.getByPlaceholder(PLACEHOLDER).fill("supply");
 
     const match = screen
-      .getByRole("group", { name: "Deals" })
+      .getByRole("group", { name: "Leads" })
       .getByText("supply", { exact: true });
     await expect.element(match).toBeVisible();
     expect(match.element().tagName).toBe("MARK");

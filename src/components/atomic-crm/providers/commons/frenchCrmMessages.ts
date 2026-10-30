@@ -1,6 +1,11 @@
 import type { CrmMessages } from "./englishCrmMessages";
 
 export const frenchCrmMessages = {
+  ra: {
+    page: {
+      dashboard: "Vue d'ensemble",
+    },
+  },
   resources: {
     companies: {
       name: "Entreprise |||| Entreprises",
@@ -293,6 +298,7 @@ export const frenchCrmMessages = {
         secondary_emails: "E-mails secondaires",
         administrator: "Admin",
         disabled: "Désactivé",
+        status: "Statut",
       },
       create: {
         error:
@@ -309,6 +315,15 @@ export const frenchCrmMessages = {
       },
       action: {
         new: "Nouvel utilisateur",
+      },
+      invite: {
+        active: "Actif",
+        pending: "Invitation en attente",
+        resend: "Renvoyer l'invitation",
+        sent: "Invitation envoyée à %{email}",
+        error: "Impossible d'envoyer l'invitation. Veuillez réessayer.",
+        never_signed_in: "Jamais connecté",
+        last_sign_in: "Dernière connexion %{time}",
       },
     },
     tasks: {
@@ -375,6 +390,29 @@ export const frenchCrmMessages = {
       reset_password: "Réinitialiser le mot de passe",
     },
     auth: {
+      back_to_sign_in: "Retour à la connexion",
+      forgot_password_details:
+        "Saisissez votre e-mail et nous vous enverrons un lien pour choisir un nouveau mot de passe.",
+      send_reset_link: "Envoyer le lien",
+      sending: "Envoi...",
+      set_password: {
+        invite_title: "Bienvenue sur %{title}",
+        invite_details:
+          "Choisissez un mot de passe pour terminer la création de votre compte.",
+        invite_submit: "Créer mon compte",
+        recovery_title: "Choisissez un nouveau mot de passe",
+        recovery_details:
+          "Saisissez un nouveau mot de passe pour votre compte.",
+        recovery_submit: "Enregistrer le mot de passe",
+        saving: "Enregistrement...",
+        password_hint: "Au moins %{count} caractères.",
+        password_too_short: "Ce mot de passe est trop court.",
+        link_invalid:
+          "Ce lien a expiré ou a déjà été utilisé. Demandez-en un nouveau ci-dessous.",
+        missing_link:
+          "Ce lien est incomplet. Ouvrez-le à nouveau depuis votre e-mail, ou demandez-en un nouveau.",
+        request_new_link: "M'envoyer un nouveau lien",
+      },
       first_name: "Prénom",
       last_name: "Nom",
       confirm_password: "Confirmer le mot de passe",
@@ -584,6 +622,7 @@ export const frenchCrmMessages = {
     language: "Langue",
     navigation: {
       label: "Navigation CRM",
+      pipeline: "Pipeline",
     },
     profile: {
       add_secondary_email: "Ajouter un e-mail",

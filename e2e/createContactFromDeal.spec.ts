@@ -35,10 +35,10 @@ test.describe("user creating a contact from the deal form", () => {
     await page.getByRole("button", { name: "Sign in" }).click();
     await expect(page).toHaveTitle(/Gerko CRM/);
 
-    await page.getByRole("link", { name: "Deals" }).click();
+    await page.getByRole("link", { name: "Pipeline" }).click();
     await page.waitForLoadState("networkidle");
 
-    await page.getByRole("link", { name: "Create deal" }).click();
+    await page.getByRole("link", { name: "Create lead" }).click();
 
     // "Linked to" keeps this scoped to the deal form once the contact sheet opens
     const dealForm = page.getByRole("dialog").filter({ hasText: "Linked to" });
@@ -73,7 +73,9 @@ test.describe("user creating a contact from the deal form", () => {
     await expect(contactSheet).toBeHidden();
     await expect(dealForm.getByText("Grace Hopper")).toBeVisible();
 
-    await dealForm.getByRole("button", { name: "Save", exact: true }).click();
+    await dealForm
+      .getByRole("button", { name: "Create lead", exact: true })
+      .click();
     await page.waitForLoadState("networkidle");
 
     // the link survives the deal being saved

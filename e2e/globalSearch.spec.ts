@@ -31,7 +31,7 @@ test.describe("global search", () => {
 
     await page.getByRole("button", { name: "Search", exact: true }).click();
     await page
-      .getByPlaceholder("Search contacts, companies, deals, tasks and notes...")
+      .getByPlaceholder("Search contacts, companies, leads, tasks and notes...")
       .fill("zebulon");
 
     const contacts = page.getByRole("group", { name: "Contacts" });

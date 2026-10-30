@@ -27,7 +27,7 @@ export const defaultCompanySectors = [
 ];
 
 export const defaultDealStages = [
-  { value: "opportunity", label: "Opportunity" },
+  { value: "opportunity", label: "New Lead" },
   { value: "proposal-sent", label: "Proposal Sent" },
   { value: "in-negociation", label: "In Negotiation" },
   { value: "won", label: "Won" },
